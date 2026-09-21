@@ -1,4 +1,4 @@
-using UnityEngine;
+ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerMovement : BasicMovement
@@ -41,19 +41,19 @@ public class PlayerMovement : BasicMovement
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
 
         // Flips sprite based on x direction
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             Debug.Log("Left");
             spriteRenderer.flipX = true;
         }
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             Debug.Log("Right");
             spriteRenderer.flipX = false;
         }
 
         // Jump requested only if touching the ground
-        if (isGrounded && Input.GetKeyDown(KeyCode.UpArrow))
+        if ((isGrounded && Input.GetKeyDown(KeyCode.UpArrow)) || (isGrounded && Input.GetKey(KeyCode.Space)))
         {
             jumpRequested = true;
             Debug.Log("Jump");
@@ -64,10 +64,10 @@ public class PlayerMovement : BasicMovement
     {
         Vector2 movement = Vector2.zero;
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             movement.x += speed * Time.fixedDeltaTime;
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             movement.x -= speed * Time.fixedDeltaTime;
 
         if (jumpRequested)
