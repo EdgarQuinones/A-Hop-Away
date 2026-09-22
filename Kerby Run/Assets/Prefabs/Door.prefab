@@ -108,6 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NextSceneTrigger
   sceneName: temp
   nextLevel: {fileID: 8300000, guid: 7347e707d6599e842bf2fc6ea51eead6, type: 3}
+  gameWin: {fileID: 8300000, guid: 2d7ea8492d8d5d34fb15fb72d74b604b, type: 3}
 --- !u!61 &6498394238412926166
 BoxCollider2D:
   m_ObjectHideFlags: 0

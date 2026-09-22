@@ -38,11 +38,13 @@ public class PlayerMovement : BasicMovement
     private void Update()
     {
         // handling jump cooldown so it cant be spammed
+        animator.SetBool("isJumping", !isGrounded);
 
         if (!canJump && !timerStarted)
         {
             timerStarted = true;
             timeRemaining = jumpCooldown;
+
         }
 
         if (timerStarted)
@@ -77,12 +79,12 @@ public class PlayerMovement : BasicMovement
         // Flips sprite based on x direction
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
-            Debug.Log("Left");
+            //Debug.Log("Left");
             spriteRenderer.flipX = true;
         }
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            Debug.Log("Right");
+            //Debug.Log("Right");
             spriteRenderer.flipX = false;
         }
 
@@ -90,7 +92,7 @@ public class PlayerMovement : BasicMovement
         if (canJump && ((isGrounded && Input.GetKeyDown(KeyCode.UpArrow)) || (isGrounded && Input.GetKey(KeyCode.Space))))
         {
             jumpRequested = true;
-            Debug.Log("Jump");
+            //Debug.Log("Jump");
         }
     }
 

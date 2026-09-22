@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -7,18 +6,33 @@ public class GameManager : MonoBehaviour
     private static int highScore = 0;
     private static int score = 0;
 
+    private GUIStyle gameOverStyle;
+    private GUIStyle scoreStyle;
+
+    private void Awake()
+    {
+        // Game over text
+        gameOverStyle = new GUIStyle();
+        gameOverStyle.fontSize = 52;
+        gameOverStyle.normal.textColor = Color.white;
+        gameOverStyle.alignment = TextAnchor.MiddleCenter;
+
+        // Score text
+        scoreStyle = new GUIStyle();
+        scoreStyle.fontSize = 32;
+        scoreStyle.normal.textColor = Color.white;
+    }
+
     public int getScore()
     {
         return score;
     }
 
-    // Used to add scores from coins
     public static void addScore(int points)
     {
         score += points;
     }
 
-    // When game restarts for whever reason
     public static void resetScore()
     {
         score = 0;
@@ -28,42 +42,73 @@ public class GameManager : MonoBehaviour
     {
         bool gameOver = SceneManager.GetActiveScene().name == "End";
 
-        // If game ends display you win
         if (gameOver)
         {
             highScore = Mathf.Max(highScore, score);
 
-            GUIStyle gameOverStyle = new GUIStyle();
-            gameOverStyle.fontSize = 52;
-            gameOverStyle.normal.textColor = Color.white;
-
-            GUI.Label(
-                new Rect(Screen.width / 2 - 100, Screen.height / 2 - 100, 200, 50),
-                "You Win!",
+            // You Win!
+            DrawOutlinedText(
+                new Rect(Screen.width / 2 - 150, Screen.height / 2 - 100, 300, 60),
+                "You found the alien's ship!",
                 gameOverStyle
             );
 
+            // Play again instructions
+            GUIStyle instructionsStyle = new GUIStyle(scoreStyle);
+            instructionsStyle.fontSize = 24;
+            instructionsStyle.alignment = TextAnchor.MiddleCenter;
 
-            gameOverStyle.fontSize = 24;
-            GUI.Label(
-                new Rect(Screen.width / 2 - 150, Screen.height / 2 - 50, 200, 50),
-                "Enter the door to play again!",
-                gameOverStyle
-            );
+            //DrawOutlinedText(
+            //    new Rect(Screen.width / 2 - 200, Screen.height / 2 - 50, 400, 50),
+            //    "Enter the door to play again!",
+            //    instructionsStyle
+            //);
         }
 
-        // Always display the score
-        GUIStyle scoreStyle = new GUIStyle();
-        scoreStyle.fontSize = 32;
-        scoreStyle.normal.textColor = Color.white;
-
+        // Score UI
         float padding = Screen.width * 0.02f;
 
-        GUI.Label(new Rect(padding + 20, padding + 30, 200, 30),
-                  "Score: " + score,
-                  scoreStyle);
-        GUI.Label(new Rect(padding + 20, padding, 200, 30),
-                  "High Score: " + highScore,
-                  scoreStyle);
+        DrawOutlinedText(
+            new Rect(padding + 20, padding + 30, 200, 40),
+            "Score: " + score,
+            scoreStyle
+        );
+
+        DrawOutlinedText(
+            new Rect(padding + 20, padding, 250, 40),
+            "High Score: " + highScore,
+            scoreStyle
+        );
+    }
+
+    private void DrawOutlinedText(Rect position, string text, GUIStyle style)
+    {
+        Color originalColor = style.normal.textColor;
+
+        // Black outline
+        style.normal.textColor = Color.black;
+
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0)
+                    continue;
+
+                Rect offset = new Rect(
+                    position.x + 2,
+                    position.y + 2,
+                    position.width,
+                    position.height
+                );
+
+                GUI.Label(offset, text, style);
+            }
+        }
+
+        // Original white text
+        style.normal.textColor = originalColor;
+
+        GUI.Label(position, text, style);
     }
 }
