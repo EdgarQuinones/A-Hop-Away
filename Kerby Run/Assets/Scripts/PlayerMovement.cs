@@ -1,4 +1,5 @@
  using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class PlayerMovement : BasicMovement
@@ -12,11 +13,20 @@ public class PlayerMovement : BasicMovement
     private bool jumpRequested = false; // Checked every frame
     public float speed = 10.0f; // run speed
 
+    private float jumpCooldown = 0.5f;
+    private float timeRemaining;
+    private bool timerStarted = false;
+    private bool canJump = true;
+
     private Rigidbody2D rb;
 
     // Animation
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+
+    // Sounds
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip fallSound;
 
     private void Awake()
     {
@@ -27,10 +37,34 @@ public class PlayerMovement : BasicMovement
 
     private void Update()
     {
+        // handling jump cooldown so it cant be spammed
+
+        if (!canJump && !timerStarted)
+        {
+            timerStarted = true;
+            timeRemaining = jumpCooldown;
+        }
+
+        if (timerStarted)
+        {
+            if (timeRemaining > 0f)
+            {
+                timeRemaining -= Time.deltaTime;
+            }
+
+            if (timeRemaining <= 0f)
+            {
+                timeRemaining = 0f;
+                canJump = true;
+                timerStarted = false;
+            }
+        }
+
         // If user falls off the map, game restarts
         if (transform.position.y < -10)
         {
             SceneManager.LoadScene("Start");
+            AudioManager.Instance.PlaySound(fallSound);
             GameManager.resetScore();
         }
 
@@ -53,7 +87,7 @@ public class PlayerMovement : BasicMovement
         }
 
         // Jump requested only if touching the ground
-        if ((isGrounded && Input.GetKeyDown(KeyCode.UpArrow)) || (isGrounded && Input.GetKey(KeyCode.Space)))
+        if (canJump && ((isGrounded && Input.GetKeyDown(KeyCode.UpArrow)) || (isGrounded && Input.GetKey(KeyCode.Space))))
         {
             jumpRequested = true;
             Debug.Log("Jump");
@@ -72,6 +106,8 @@ public class PlayerMovement : BasicMovement
 
         if (jumpRequested)
         {
+            canJump = false;
+            AudioManager.Instance.PlaySound(jumpSound);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             jumpRequested = false;
         }//end if

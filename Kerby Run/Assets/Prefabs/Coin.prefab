@@ -107,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   value: 1
+  pickup: {fileID: 8300000, guid: 2ad05ec510cd7a544bc1d6ad4a424d18, type: 3}
 --- !u!58 &5129883340736044883
 CircleCollider2D:
   m_ObjectHideFlags: 0

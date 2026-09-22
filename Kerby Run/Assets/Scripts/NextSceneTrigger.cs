@@ -3,7 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class NextSceneTrigger : MonoBehaviour
 {
-    public string sceneName;
+    [SerializeField] private string sceneName;
+    [SerializeField] private AudioClip nextLevel;
     // Changes to a scene based on the variable set
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -14,6 +15,7 @@ public class NextSceneTrigger : MonoBehaviour
 
         if (collision.CompareTag("Player"))
         {
+            AudioManager.Instance.PlaySound(nextLevel);
             SceneManager.LoadScene(sceneName);
         }
     }
