@@ -13,13 +13,13 @@ public class GameManager : MonoBehaviour
     {
         // Game over text
         gameOverStyle = new GUIStyle();
-        gameOverStyle.fontSize = 52;
+        gameOverStyle.fontSize = 80;
         gameOverStyle.normal.textColor = Color.white;
         gameOverStyle.alignment = TextAnchor.MiddleCenter;
 
         // Score text
         scoreStyle = new GUIStyle();
-        scoreStyle.fontSize = 32;
+        scoreStyle.fontSize = 64;
         scoreStyle.normal.textColor = Color.white;
     }
 
@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
         float padding = Screen.width * 0.02f;
 
         DrawOutlinedText(
-            new Rect(padding + 20, padding + 30, 200, 40),
+            new Rect(padding + 20, padding + 60, 200, 40),
             "Score: " + score,
             scoreStyle
         );
