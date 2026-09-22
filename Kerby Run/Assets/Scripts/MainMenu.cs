@@ -7,4 +7,23 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("Start");
     }
+
+    public void onSettingsClicked()
+    {
+        //SceneManager.LoadScene("Start");
+    }
+
+    public void onCreditsClicked()
+    {
+        //SceneManager.LoadScene("Start");
+    }
+
+    public void onQuitClicked()
+    {
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+                Application.Quit();
+        #endif
+    }
 }
