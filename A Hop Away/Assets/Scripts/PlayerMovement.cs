@@ -6,8 +6,12 @@ public class PlayerMovement : BasicMovement
 {
     // Variables used for running/jumping
     public float jumpForce = 20.0f; // Height of the jump
+
+    // ground check
     public Transform groundCheck; // Object used to check if touching the ground
-    public float checkRadius = 0.2f; // Distance from ground check to see if touching
+    [SerializeField] private float boxWidth = 0.2f; // Distance from ground check to see if touching
+    [SerializeField] private float boxHeight = 0.2f; // Distance from ground check to see if touching
+
     public LayerMask groundLayer; // What objects are defined as the ground
     private bool isGrounded; // Wether or not the player can actually jump
     private bool jumpRequested = false; // Checked every frame
@@ -71,10 +75,15 @@ public class PlayerMovement : BasicMovement
         }
 
         // Checks if the player is touching the ground by making 
-        // an invisible circle on the bottom of the players feet
+        // an invisible square on the bottom of the players feet
         // if that collides with an object with the "ground" 
         // layer, the player will be considered grounded.
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
+        isGrounded = Physics2D.OverlapBox(
+            groundCheck.position,
+            new Vector2(boxWidth, boxHeight),
+            0f,
+            groundLayer
+        );
 
         // Flips sprite based on x direction
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
@@ -121,4 +130,16 @@ public class PlayerMovement : BasicMovement
 
         rb.linearVelocity = new Vector2(movement.x / Time.fixedDeltaTime, rb.linearVelocity.y);
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.DrawWireCube(
+                groundCheck.position,
+                new Vector2(boxWidth, boxHeight)
+            );
+        }
+    }
+
 }
