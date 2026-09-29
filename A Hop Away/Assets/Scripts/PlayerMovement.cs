@@ -1,5 +1,6 @@
  using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class PlayerMovement : BasicMovement
@@ -17,10 +18,16 @@ public class PlayerMovement : BasicMovement
     private bool jumpRequested = false; // Checked every frame
     public float speed = 10.0f; // run speed
 
+    // jump rules (coyote time, jumps per second)
     private float jumpCooldown = 0.5f;
-    private float timeRemaining;
-    private bool timerStarted = false;
+    private float jumpCoolDownTimeRemaining;
+    private bool jumpCoolDownTimerStarted = false;
+    private bool jumpCoolDownFinished = true; // can jump
     private bool canJump = true;
+    private bool jumpTimerStarted = false;
+    [SerializeField] private float coyoteTimerLength = 0.15f;
+    private float coyoteTimeRemaining;
+    private bool coyoteTimerStarted = false;
 
     private Rigidbody2D rb;
 
@@ -44,25 +51,24 @@ public class PlayerMovement : BasicMovement
         // handling jump cooldown so it cant be spammed
         animator.SetBool("isJumping", !isGrounded);
 
-        if (!canJump && !timerStarted)
+        if (!jumpCoolDownFinished && !jumpCoolDownTimerStarted)
         {
-            timerStarted = true;
-            timeRemaining = jumpCooldown;
-
+            jumpCoolDownTimeRemaining = jumpCooldown;
+            jumpCoolDownTimerStarted = true;
         }
 
-        if (timerStarted)
+        if (jumpCoolDownTimerStarted)
         {
-            if (timeRemaining > 0f)
+            if (jumpCoolDownTimeRemaining > 0f)
             {
-                timeRemaining -= Time.deltaTime;
+                jumpCoolDownTimeRemaining -= Time.deltaTime;
             }
 
-            if (timeRemaining <= 0f)
+            if (jumpCoolDownTimeRemaining <= 0f)
             {
-                timeRemaining = 0f;
-                canJump = true;
-                timerStarted = false;
+                jumpCoolDownTimeRemaining = 0f;
+                jumpCoolDownTimerStarted = false;
+                jumpCoolDownFinished = true; // can jump
             }
         }
 
@@ -97,12 +103,59 @@ public class PlayerMovement : BasicMovement
             spriteRenderer.flipX = false;
         }
 
+        // coyote time
+        // IF grounded
+        // canJump == true
+        // if NOT grounded AND NOT timerStarted AND canJump
+        // timer starts (0.15s)
+        // timerStarted = true
+        // IF timerEnds()
+        // timerStarted = false
+        // canJump = false
+
+
+        // coyote time
+        if (isGrounded)// IF grounded
+        {
+            Debug.Log("GROUNDED -> CAN WALK");
+            canJump = true; // canJump == true
+        }
+
+        if (!isGrounded && !jumpTimerStarted && canJump) // if NOT grounded AND NOT timerStarted AND canJump
+        {
+            Debug.Log("NOT GROUNDED -> TIMER ON -> CAN JUMP");
+            if (!coyoteTimerStarted) // timer starts(0.15s)
+            {
+                coyoteTimerStarted = true; // timerStarted = true
+                coyoteTimeRemaining = coyoteTimerLength;
+            }
+
+            if (coyoteTimerStarted) 
+            {
+                if (coyoteTimeRemaining > 0f)
+                {
+                    coyoteTimeRemaining -= Time.deltaTime;
+                }
+
+                if (coyoteTimeRemaining <= 0f) // IF timerEnds()
+                {
+                    Debug.Log("TIMER ENDED -> NOT GROUNDED -> CANT JUMP");
+                    coyoteTimeRemaining = 0f;
+                    coyoteTimerStarted = false;
+                    canJump = false; // canJump = false
+                }
+            }
+            // timer
+        }
+
+
         // Jump requested only if touching the ground
-        if (canJump && ((isGrounded && Input.GetKeyDown(KeyCode.UpArrow)) || (isGrounded && Input.GetKey(KeyCode.Space))))
+        if (jumpCoolDownFinished && canJump && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKey(KeyCode.Space)))
         {
             jumpRequested = true;
             //Debug.Log("Jump");
         }
+
     }
 
     private void FixedUpdate()
@@ -117,7 +170,7 @@ public class PlayerMovement : BasicMovement
 
         if (jumpRequested)
         {
-            canJump = false;
+            jumpCoolDownFinished = false;
             AudioManager.Instance.PlaySound(jumpSound);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             jumpRequested = false;
