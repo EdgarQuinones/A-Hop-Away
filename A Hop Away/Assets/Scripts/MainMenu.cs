@@ -10,12 +10,12 @@ public class MainMenu : MonoBehaviour
 
     public void onSettingsClicked()
     {
-        //SceneManager.LoadScene("Start");
+        //SceneManager.LoadScene("Settings");
     }
 
     public void onCreditsClicked()
     {
-        //SceneManager.LoadScene("Start");
+        //SceneManager.LoadScene("Credits");
     }
 
     public void onQuitClicked()

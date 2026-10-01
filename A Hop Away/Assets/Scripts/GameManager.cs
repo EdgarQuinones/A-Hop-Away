@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
         // Score UI
         float padding = Screen.width * 0.02f;
 
-        if (SceneManager.GetActiveScene().name != "Menu")
+        if (SceneManager.GetActiveScene().name != "Menu" && SceneManager.GetActiveScene().name != "Settings" && SceneManager.GetActiveScene().name != "Credits")
         {
             DrawOutlinedText(
             new Rect(padding + 20, padding + 60, 200, 40),
@@ -93,11 +93,15 @@ public class GameManager : MonoBehaviour
             );
         }
 
-        DrawOutlinedText(
+        if (SceneManager.GetActiveScene().name != "Settings" && SceneManager.GetActiveScene().name != "Credits")
+        {
+            DrawOutlinedText(
             new Rect(padding + 20, padding, 250, 40),
             "High Score: " + highScore,
             scoreStyle
-        );
+            );
+        }
+
     }
 
     private void DrawOutlinedText(Rect position, string text, GUIStyle style)
