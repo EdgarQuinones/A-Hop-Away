@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     private GUIStyle gameOverStyle;
     private GUIStyle scoreStyle;
 
+    [SerializeField] private Texture2D cursorTexture;
+
+
     private void Awake()
     {
         // Game over text
@@ -21,6 +24,19 @@ public class GameManager : MonoBehaviour
         scoreStyle = new GUIStyle();
         scoreStyle.fontSize = 64;
         scoreStyle.normal.textColor = Color.white;
+
+        Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
+    }
+
+    private void Update()
+    {
+        if (SceneManager.GetActiveScene().name == "Menu")
+        {
+            Cursor.visible = true;
+        } else
+        {
+            Cursor.visible = false;
+        }
     }
 
     public int getScore()
@@ -68,11 +84,14 @@ public class GameManager : MonoBehaviour
         // Score UI
         float padding = Screen.width * 0.02f;
 
-        DrawOutlinedText(
+        if (SceneManager.GetActiveScene().name != "Menu")
+        {
+            DrawOutlinedText(
             new Rect(padding + 20, padding + 60, 200, 40),
             "Score: " + score,
             scoreStyle
-        );
+            );
+        }
 
         DrawOutlinedText(
             new Rect(padding + 20, padding, 250, 40),

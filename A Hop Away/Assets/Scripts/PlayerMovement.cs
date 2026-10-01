@@ -104,26 +104,15 @@ public class PlayerMovement : BasicMovement
         }
 
         // coyote time
-        // IF grounded
-        // canJump == true
-        // if NOT grounded AND NOT timerStarted AND canJump
-        // timer starts (0.15s)
-        // timerStarted = true
-        // IF timerEnds()
-        // timerStarted = false
-        // canJump = false
-
-
-        // coyote time
         if (isGrounded)// IF grounded
         {
-            Debug.Log("GROUNDED -> CAN WALK");
+            //Debug.Log("GROUNDED -> CAN WALK");
             canJump = true; // canJump == true
         }
 
         if (!isGrounded && !jumpTimerStarted && canJump) // if NOT grounded AND NOT timerStarted AND canJump
         {
-            Debug.Log("NOT GROUNDED -> TIMER ON -> CAN JUMP");
+            //Debug.Log("NOT GROUNDED -> TIMER ON -> CAN JUMP");
             if (!coyoteTimerStarted) // timer starts(0.15s)
             {
                 coyoteTimerStarted = true; // timerStarted = true
@@ -139,7 +128,7 @@ public class PlayerMovement : BasicMovement
 
                 if (coyoteTimeRemaining <= 0f) // IF timerEnds()
                 {
-                    Debug.Log("TIMER ENDED -> NOT GROUNDED -> CANT JUMP");
+                    //Debug.Log("TIMER ENDED -> NOT GROUNDED -> CANT JUMP");
                     coyoteTimeRemaining = 0f;
                     coyoteTimerStarted = false;
                     canJump = false; // canJump = false
