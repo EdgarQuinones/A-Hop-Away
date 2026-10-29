@@ -16,4 +16,4 @@ A simple, colorful 2D platformer where players run, jump, and navigate obstacles
 
 ## Play Now
 
-Interested in playing? Play Kerby [Run on itch.io](https://edgarquinones.itch.io/a-hop-away)! 
+Interested in playing? Play Kerby Run [on itch.io](https://edgarquinones.itch.io/a-hop-away)! 
